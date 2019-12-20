@@ -1,0 +1,417 @@
+{% extends 'main/__base.html' %}
+{% load static %}
+{% load humanize %}
+
+{% block style %}
+
+{% endblock %}
+
+{% block session_in_header %}
+
+{% endblock %}
+
+
+{% block content %}
+    <main class="pt-5">
+        <div class="container pt-5">
+            {#            <p class="font-weight-bold">허위매물 등록현황<span type="button" class="badge badge-pill badge-light float-right" data-toggle="modal" data-target="#fullHeightModalTop">infomation</span></p>#}
+            <p class="font-weight-bold">허위매물 등록현황<a href="{% url 'fake_list' %}" class="badge badge-pill badge-light float-right">신고한매물은 제외하기</a></p>
+            <hr>
+            <div class="row">
+                {% for list in lists %}
+                    {% if list.size == 59 %}
+                        <div class="col-lg-4 col-md-12 mb-4" id="apart_{{ list.article_num }}">
+                            <div class="card mdb-color text-center z-depth-2">
+                                <div class="card-body py-2">
+                                    <h5 class="font-weight-bold cyan-text mt-2 mb-3"><strong>{{ list.size }}m<sup>2</sup> {{ list.price | intcomma }}</strong><span class="font-small">만원</span></h5>
+                                    <p class="white-text mb-0">{{ list.dong }} {{ list.where }}층</p>
+                                    <p class="white-text mb-0">{{ list.office }}</p>
+                                    <p>
+                                        {% if list.trade == 'N' %}
+                                            <span class="badge badge-pill badge-light">등록중</span>
+                                        {% elif list.trade == 'Y' %}
+                                            <span class="badge badge-pill badge-default">거래완료</span>
+                                        {% endif %}
+                                        {% if list.owner == 'OWNER' %}
+                                            <span class="badge badge-pill badge-success">집주인인증</span>
+                                        {% endif %}
+                                    </p>
+                                    <hr class="my-1">
+                                    <div class="row">
+                                        <div class="m-0 p-0 col-6">
+                                            <a href="https://m.land.naver.com/article/info/{{ list.article_num }}" class="btn btn-sm btn-white float-right" target="_blank">자세히</a>
+                                        </div>
+                                        <div class="col-6 m-0 p-0" id="id_button_{{ list.article_num }}">
+                                            {% if request.user in list.members.all %}
+                                                <button class="btn btn-sm btn-grey float-left" data-toggle="modal" data-target="#complate_centralModalSm_{{ list.article_num }}">신고완료</button>
+                                            {% else %}
+                                                <button class="btn btn-sm btn-warning float-left" data-toggle="modal" data-target="#centralModalSm_{{ list.article_num }}">신고하기</button>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                    <!-- 신고하기 Central Modal Small -->
+                                    <div class="modal fade" id="centralModalSm_{{ list.article_num }}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+                                         aria-hidden="true">
+
+                                        <!-- Change class .modal-sm to change the size of the modal -->
+                                        <div class="modal-dialog modal-sm" role="document">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h4 class="modal-title w-100" id="myModalLabel">신고하러가기</h4>
+                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                        <span aria-hidden="true">&times;</span>
+                                                    </button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <p class="mb-1">신고하시겠습니까?</p>
+                                                    <p class="small">- 로그인을 하신 후 [이미신고]를 클릭하시면 이미 신고를 하신 매물로 등록하여 허위매물 리스트에서 제외 합니다.</p>
+                                                    <p class="small">- 로그인을 하신 후 [신고하러가기]를 클릭하시면 네이버 신고페이지로 이동되며, 허위매물 리스트에서 제외됩니다.</p>
+                                                    <p class="small">- 허위매물리스트에서 제외된 매물들도 리스트에서 보시려면 "신고한매물도 함께보기"를 통해 확인 가능합니다. </p>
+                                                </div>
+                                                {% if user.is_authenticated %}
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-secondary btn-sm" id="id_singo_already_{{ list.article_num }}" value="{{ list.article_num }}">이미신고</button>
+                                                        <a href="https://m.land.naver.com/falsehood/falsehoodArticlePage?atclNo={{ list.article_num }}" class="btn btn-primary btn-sm" target="_blank">신고하러가기</a>
+                                                    </div>
+                                                {% else %}
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-outline_secondary btn-sm" id="id_singo_not_login_{{ list.article_num }}">이미신고</button>
+                                                        <a href="https://m.land.naver.com/falsehood/falsehoodArticlePage?atclNo={{ list.article_num }}" class="btn btn-primary btn-sm" target="_blank">신고하러가기</a>
+                                                    </div>
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- 신고하기 Central Modal Small 끝 -->
+
+                                    <!-- 신고취소 Central Modal Small -->
+                                    <div class="modal fade" id="complate_centralModalSm_{{ list.article_num }}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+                                         aria-hidden="true">
+
+                                        <!-- Change class .modal-sm to change the size of the modal -->
+                                        <div class="modal-dialog modal-sm" role="document">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h4 class="modal-title w-100" id="myModalLabel">신고된 매물입니다</h4>
+                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                        <span aria-hidden="true">&times;</span>
+                                                    </button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <p class="mb-1">이미신고 매물을 취소 하시겠습니까?</p>
+                                                    <p class="small">- [이미신고] 하신 매물에서 신고안한 매물로 복귀 합니다.</p>
+                                                    <p class="small">- 네이버에서 이미 신고를 완료 하신경우 네이버 신고는 취소 되지 않습니다.</p>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-secondary btn-sm" id="id_singo_cancel_{{ list.article_num }}" value="{{ list.article_num }}">신고취소</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- 신고취소 Central Modal Small 끝 -->
+                                </div>
+                            </div>
+                        </div>
+                    {% elif list.size == 84 %}
+                        <div class="col-lg-4 col-md-6 mb-4" id="apart_{{ list.article_num }}">
+                            <div class="card warning-color-dark text-center z-depth-2">
+                                <div class="card-body py-2">
+                                    <h5 class="font-weight-bold text-primary mt-2 mb-3"><strong>{{ list.size }}m<sup>2</sup> {{ list.price | intcomma }}</strong><span class="font-small">만원</span></h5>
+                                    <p class="white-text mb-0">{{ list.dong }} {{ list.where }}층</p>
+                                    <p class="white-text mb-0">{{ list.office }}</p>
+                                    <p>
+                                        {% if list.trade == 'N' %}
+                                            <span class="badge badge-pill badge-light">등록중</span>
+                                        {% elif list.trade == 'Y' %}
+                                            <span class="badge badge-pill badge-default">거래완료</span>
+                                        {% endif %}
+                                        {% if list.owner == 'OWNER' %}
+                                            <span class="badge badge-pill badge-success">집주인인증</span>
+                                        {% endif %}
+                                    </p>
+                                    <hr class="my-1">
+                                    <div class="row">
+                                        <div class="m-0 p-0 col-6">
+                                            <a href="https://m.land.naver.com/article/info/{{ list.article_num }}" class="btn btn-sm btn-white float-right" target="_blank">자세히</a>
+                                        </div>
+                                        <div class="col-6 m-0 p-0" id="id_button_{{ list.article_num }}">
+                                            {% if request.user in list.members.all %}
+                                                <button class="btn btn-sm btn-grey float-left" data-toggle="modal" data-target="#complate_centralModalSm_{{ list.article_num }}">신고완료</button>
+                                            {% else %}
+                                                <button class="btn btn-sm btn-warning float-left" data-toggle="modal" data-target="#centralModalSm_{{ list.article_num }}">신고하기</button>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+
+                                    <!-- Central Modal Small -->
+                                    <div class="modal fade" id="centralModalSm_{{ list.article_num }}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+                                         aria-hidden="true">
+
+                                        <!-- Change class .modal-sm to change the size of the modal -->
+                                        <div class="modal-dialog modal-sm" role="document">
+
+
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h4 class="modal-title w-100" id="myModalLabel">신고하러가기</h4>
+                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                        <span aria-hidden="true">&times;</span>
+                                                    </button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <p class="mb-1">신고하시겠습니까?</p>
+                                                    <p class="small">- 로그인을 하신 후 [이미신고]를 클릭하시면 이미 신고를 하신 매물로 등록하여 허위매물 리스트에서 제외 합니다.</p>
+                                                    <p class="small">- 로그인을 하신 후 [신고하러가기]를 클릭하시면 네이버 신고페이지로 이동되며, 허위매물 리스트에서 제외됩니다.</p>
+                                                    <p class="small">- 허위매물리스트에서 제외된 매물들도 리스트에서 보시려면 "신고한매물도 함께보기"를 통해 확인 가능합니다. </p>
+                                                </div>
+                                                {% if user.is_authenticated %}
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-secondary btn-sm" id="id_singo_already_{{ list.article_num }}" value="{{ list.article_num }}">이미신고</button>
+                                                        <a href="https://m.land.naver.com/falsehood/falsehoodArticlePage?atclNo={{ list.article_num }}" class="btn btn-primary btn-sm" target="_blank">신고하러가기</a>
+                                                    </div>
+                                                {% else %}
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-outline_secondary btn-sm" id="id_singo_not_login_{{ list.article_num }}">이미신고</button>
+                                                        <a href="https://m.land.naver.com/falsehood/falsehoodArticlePage?atclNo={{ list.article_num }}" class="btn btn-primary btn-sm" target="_blank">신고하러가기</a>
+                                                    </div>
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- Central Modal Small -->
+
+                                    <!-- 신고취소 Central Modal Small -->
+                                    <div class="modal fade" id="complate_centralModalSm_{{ list.article_num }}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+                                         aria-hidden="true">
+
+                                        <!-- Change class .modal-sm to change the size of the modal -->
+                                        <div class="modal-dialog modal-sm" role="document">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h4 class="modal-title w-100" id="myModalLabel">신고된 매물입니다</h4>
+                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                        <span aria-hidden="true">&times;</span>
+                                                    </button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <p class="mb-1">이미신고 매물을 취소 하시겠습니까?</p>
+                                                    <p class="small">- [이미신고] 하신 매물에서 신고안한 매물로 복귀 합니다.</p>
+                                                    <p class="small">- 네이버에서 이미 신고를 완료 하신경우 네이버 신고는 취소 되지 않습니다.</p>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-secondary btn-sm" id="id_singo_cancel_{{ list.article_num }}" value="{{ list.article_num }}">신고취소</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- 신고취소 Central Modal Small 끝 -->
+                                </div>
+                            </div>
+
+                        </div>
+                    {% elif list.size == 133 %}
+                        <div class="col-lg-4 col-md-6 mb-4" id="apart_{{ list.article_num }}">
+                        <div class="card light-blue darken-1 text-center z-depth-2">
+                            <div class="card-body py-2">
+                                <h5 class="font-weight-bold purple-text mt-2 mb-3"><strong>{{ list.size }}m<sup>2</sup> {{ list.price | intcomma }}</strong><span class="font-small">만원</span></h5>
+                                <p class="white-text mb-0">{{ list.dong }} {{ list.where }}층</p>
+                                <p class="white-text mb-0">{{ list.office }}</p>
+                                <p>
+                                    {% if list.trade == 'N' %}
+                                        <span class="badge badge-pill badge-light">등록중</span>
+                                    {% elif list.trade == 'Y' %}
+                                        <span class="badge badge-pill badge-default">거래완료</span>
+                                    {% endif %}
+                                    {% if list.owner == 'OWNER' %}
+                                        <span class="badge badge-pill badge-success">집주인인증</span>
+                                    {% endif %}
+                                </p>
+                                <hr class="my-1">
+                                <div class="row">
+                                    <div class="m-0 p-0 col-6">
+                                        <a href="https://m.land.naver.com/article/info/{{ list.article_num }}" class="btn btn-sm btn-white float-right" target="_blank">자세히</a>
+                                    </div>
+                                    <div class="col-6 m-0 p-0" id="id_button_{{ list.article_num }}">
+                                        {% if request.user in list.members.all %}
+                                            <button class="btn btn-sm btn-grey float-left" data-toggle="modal" data-target="#complate_centralModalSm_{{ list.article_num }}">신고완료</button>
+                                        {% else %}
+                                            <button class="btn btn-sm btn-warning float-left" data-toggle="modal" data-target="#centralModalSm_{{ list.article_num }}">신고하기</button>
+                                        {% endif %}
+                                    </div>
+                                </div>
+
+                                <!-- Central Modal Small -->
+                                <div class="modal fade" id="centralModalSm_{{ list.article_num }}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+                                     aria-hidden="true">
+                                    <!-- Change class .modal-sm to change the size of the modal -->
+                                    <div class="modal-dialog modal-sm" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h4 class="modal-title w-100" id="myModalLabel">신고하러가기</h4>
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <p class="mb-1">신고하시겠습니까?</p>
+                                                <p class="small">- 로그인을 하신 후 [이미신고]를 클릭하시면 이미 신고를 하신 매물로 등록하여 허위매물 리스트에서 제외 합니다.</p>
+                                                <p class="small">- 로그인을 하신 후 [신고하러가기]를 클릭하시면 네이버 신고페이지로 이동됩니다.</p>
+                                                <p class="small">- 신고가 이미되어있거나 신고를 하고 오신경우 [이미신고]를 클릭하셔야 허위매물리스트에서 제외 됩니다.</p>
+                                                <p class="small">- 허위매물리스트에서 제외된 매물들도 리스트에서 보시려면 "신고한매물도 함께보기"를 통해 확인 가능합니다. </p>
+                                            </div>
+                                            {% if user.is_authenticated %}
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-secondary btn-sm" id="id_singo_already_{{ list.article_num }}" value="{{ list.article_num }}">이미신고</button>
+                                                    <a href="https://m.land.naver.com/falsehood/falsehoodArticlePage?atclNo={{ list.article_num }}" class="btn btn-primary btn-sm" target="_blank">신고하러가기</a>
+                                                </div>
+                                            {% else %}
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-outline_secondary btn-sm" id="id_singo_not_login_{{ list.article_num }}">이미신고</button>
+                                                    <a href="https://m.land.naver.com/falsehood/falsehoodArticlePage?atclNo={{ list.article_num }}" class="btn btn-primary btn-sm" target="_blank">신고하러가기</a>
+                                                </div>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- Central Modal Small -->
+                                <!-- 신고취소 Central Modal Small -->
+                                <div class="modal fade" id="complate_centralModalSm_{{ list.article_num }}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+                                     aria-hidden="true">
+
+                                    <!-- Change class .modal-sm to change the size of the modal -->
+                                    <div class="modal-dialog modal-sm" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h4 class="modal-title w-100" id="myModalLabel">신고된 매물입니다</h4>
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <p class="mb-1">이미신고 매물을 취소 하시겠습니까?</p>
+                                                <p class="small">- [이미신고] 하신 매물에서 신고안한 매물로 복귀 합니다.</p>
+                                                <p class="small">- 네이버에서 이미 신고를 완료 하신경우 네이버 신고는 취소 되지 않습니다.</p>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary btn-sm" id="id_singo_cancel_{{ list.article_num }}" value="{{ list.article_num }}">신고취소</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- 신고취소 Central Modal Small 끝 -->
+                            </div>
+                        </div>
+                    {% endif %}
+                {% endfor %}
+                </div>
+                <!-- Grid column -->
+
+            </div>
+        </div>
+    </main>
+
+
+    <!-- Full Height Modal Right -->
+    <div class="modal fade right" id="fullHeightModalTop" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+         aria-hidden="true">
+
+        <!-- Add class .modal-full-height and then add class .modal-right (or other classes from list above) to set a position to the modal -->
+        <div class="modal-dialog modal-full-height modal-top" role="document">
+
+
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title w-100" id="myModalLabel">Modal title</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    ...
+                </div>
+                <div class="modal-footer justify-content-center">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary">Save changes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Full Height Modal Right -->
+
+{% endblock %}
+
+
+{% block before_script %}
+
+{% endblock %}
+
+
+{% block after_script %}
+    <script>
+        $('[id^=id_singo_not_login_]').click(function () {
+            alert('로그인을 하시면 신고 매물 관리가 편리합니다. 회원아이디 생성 문의 : 관리자(카톡방 아이디 : 제갈익 or 112동) 카톡으로')
+        });
+
+        $('[id^=id_singo_already_]').click(function () {
+            var article = $(this).val();
+            var token = '{{csrf_token}}';
+
+            $.ajax({
+                headers: { "X-CSRFToken": token },
+                url: '{% url 'change_to_doctor_status_ajax' %}',
+                type: 'POST',
+                data: {
+                    target : article,
+                },
+
+                success: function (response_2) {
+                    if (response_2.ok === 'ok') {
+                        console.log('-------ajax 송수신 완료-------');
+                        console.log(response_2);
+
+                        var selecting = '#id_button_'+article;
+                        console.log(selecting);
+
+                        $(selecting).html('<button class="btn btn-sm btn-grey float-left" data-toggle="modal" data-target="#complate_centralModalSm_'+article+'">신고완료</button>');
+                        $('#centralModalSm_'+article).modal('hide');
+
+                    }
+                },
+            });
+        });
+
+
+        $('[id^=id_singo_cancel_]').click(function () {
+            var article = $(this).val();
+            var token = '{{csrf_token}}';
+
+            $.ajax({
+                headers: { "X-CSRFToken": token },
+                url: '{% url 'change_back_singo_ajax' %}',
+                type: 'POST',
+                data: {
+                    target : article,
+                },
+
+                success: function (response_2) {
+                    if (response_2.ok === 'ok') {
+                        console.log('-------ajax 송수신 완료-------');
+                        console.log(response_2);
+
+                        var selecting = '#id_button_'+article;
+
+                        $(selecting).html('<button class="btn btn-sm btn-warning float-left" data-toggle="modal" data-target="#centralModalSm_'+article+'">신고하기</button>');
+                        $('#complate_centralModalSm_'+article).modal('hide');
+
+                    }
+                },
+            });
+        })
+
+
+    </script>
+
+
+{% endblock %}
+
+

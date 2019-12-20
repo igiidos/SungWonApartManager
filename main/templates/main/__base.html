@@ -1,0 +1,127 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <!-- Required meta tags always come first -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <title>진산마을-성원상떼빌 부동산 매니져</title>
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css">
+    <!-- Bootstrap core CSS -->
+    <link href="{% static 'main/css/bootstrap.min.css' %}" rel="stylesheet">
+    <!-- Material Design Bootstrap -->
+    <link href="{% static 'main/css/mdb.min.css' %}" rel="stylesheet">
+
+    <style>
+
+
+        .top-nav-collapse {
+            background-color: #ee654f !important;
+        }
+        .navbar:not(.top-nav-collapse) {
+            background: transparent !important;
+        }
+        @media (max-width: 768px) {
+            .navbar:not(.top-nav-collapse) {
+                background: #929fba !important;
+            }
+        }
+
+
+
+    </style>
+    {% block style %}
+
+    {% endblock %}
+
+</head>
+
+<body>
+
+
+<!--Main Navigation-->
+<header>
+
+    <!--Navbar-->
+    <nav class="navbar navbar-expand-lg navbar-light fixed-top scrolling-navbar">
+        <div class="container">
+            <a class="navbar-brand" href="{% url 'index' %}"><strong>SungWon</strong></a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent-7"
+                    aria-controls="navbarSupportedContent-7" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent-7">
+                <ul class="navbar-nav mr-auto">
+                    {#                    <li class="nav-item active">#}
+                    {#                        <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>#}
+                    {#                    </li>#}
+                    {% if request.user.is_superuser %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'saving' %}">Saving</a>
+                        </li>
+                    {% endif %}
+                    {% if request.user.is_authenticated %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'logout' %}">Logout</a>
+                        </li>
+                    {% else %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'login' %}">Login</a>
+                        </li>
+                    {% endif %}
+
+                    {#                    <li class="nav-item">#}
+                    {#                        <a class="nav-link" href="#">Profile</a>#}
+                    {#                    </li>#}
+                </ul>
+                {#                <form class="form-inline">#}
+                {#                    <div class="md-form my-0">#}
+                {#                        <input class="form-control mr-sm-2" type="text" placeholder="Search" aria-label="Search">#}
+                {#                    </div>#}
+                {#                </form>#}
+            </div>
+        </div>
+    </nav>
+    {% block session_in_header %}
+    {% endblock %}
+</header>
+{% block content %}
+{% endblock %}
+<!--Footer-->
+<footer class="page-footer mt-4   mdb-color lighten-3 text-center text-md-left">
+    <!--Copyright-->
+    <div class="footer-copyright text-center py-3 wow fadeIn" data-wow-delay="0.3s">
+        <div class="container-fluid">
+            &copy; 2019 Copyright: <a href=""> igiidos@gmail.com </a>
+        </div>
+    </div>
+    <!--/Copyright-->
+
+</footer>
+<!--/Footer-->
+{% block before_script %}
+
+{% endblock %}
+<!-- SCRIPTS -->
+<!-- JQuery -->
+<script type="text/javascript" src="{% static 'main/js/jquery-3.4.1.min.js' %}"></script>
+<!-- Bootstrap tooltips -->
+<script type="text/javascript" src="{% static 'main/js/popper.min.js' %}"></script>
+<!-- Bootstrap core JavaScript -->
+<script type="text/javascript" src="{% static 'main/js/bootstrap.min.js' %}"></script>
+<!-- MDB core JavaScript -->
+<script type="text/javascript" src="{% static 'main/js/mdb.min.js' %}"></script>
+<script>
+    new WOW().init();
+
+</script>
+{% block after_script %}
+
+{% endblock %}
+</body>
+
+</html>

@@ -1,0 +1,84 @@
+{% extends 'main/__base.html' %}
+{% load static %}
+{% load humanize %}
+
+{% block style %}
+
+{% endblock %}
+
+{% block session_in_header %}
+
+{% endblock %}
+
+
+{% block content %}
+    <main class="pt-5">
+        <div class="container pt-5">
+            <div class="row infinite-container">
+                {% for post in lists %}
+                    <div class="col-md-3 infinite-item">
+                        <div class="card mb-4 shadow-sm">
+
+                            {% if post.flag == 'y' %}
+                                <div class="card-body">
+                                    <h6>{{ post.office }}</h6>
+                                    <p class="card-text font-weight-bold">{{ post.size }}m<sup>2</sup> | {{ post.price | intcomma }}만원</p>
+                                    <p class="card-text">
+                                        {{ post.dong }} / {{ post.where }}층
+                                    </p>
+                                </div>
+                            {% else %}
+                                <div class="card-body stylish-color-dark text-white">
+                                    <h6><span class="text-danger small">(매물내림)</span>{{ post.office }}</h6>
+                                    <p class="card-text font-weight-bold">{{ post.size }}m<sup>2</sup> | {{ post.price | intcomma }}만원</p>
+                                    <p class="card-text">
+                                        {{ post.dong }} / {{ post.where }}층
+                                    </p>
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+            {% if page_obj.has_next %}
+                <a class="infinite-more-link" href="?page={{ page_obj.next_page_number }}"></a>
+            {% endif %}
+            <div class="d-flex justify-content-center" style="display:none;">
+                <div class="spinner-border" role="status">
+                    <span class="sr-only">Loading...</span>
+                </div>
+            </div>
+        </div>
+    </main>
+
+{% endblock %}
+
+
+{% block before_script %}
+
+{% endblock %}
+
+
+{% block after_script %}
+    <script src="{% static 'main/js/jquery.waypoint.min.js' %}"></script>
+    <script src="{% static 'main/js/infinite.min.js' %}"></script>
+    <script>
+        var infinite = new Waypoint.Infinite({
+            element: $('.infinite-container')[0],
+            handler: function(direction) {
+
+            },
+            offset: 'bottom-in-view',
+
+            onBeforePageLoad: function () {
+                $('.spinner-border').show();
+            },
+            onAfterPageLoad: function () {
+                $('.spinner-border').hide();
+            }
+
+        });
+
+    </script>
+
+{% endblock %}

@@ -1,0 +1,264 @@
+{% extends 'main/__base.html' %}
+{% load static %}
+
+{% block style %}
+
+
+    <style>
+
+
+
+
+        .intro-2 {
+            background: url("https://mdbootstrap.com/img/Photos/Others/architecture.jpg")no-repeat center center;
+            background-size: cover;
+        }
+
+
+        .rgba-gradient {
+            background: -moz-linear-gradient(45deg, rgba(42, 27, 161, 0.6), rgba(50, 189, 229, 0.6) 100%);
+            background: -webkit-linear-gradient(45deg, rgba(42, 27, 161, 0.6), rgba(50, 189, 229, 0.6) 100%);
+            background: -webkit-gradient(linear, 45deg, from(rgba(42, 27, 161, 0.6)), to(rgba(50, 189, 229, 0.6)));
+            background: -o-linear-gradient(45deg, rgba(42, 27, 161, 0.6), rgba(50, 189, 229, 0.6) 100%);
+            background: linear-gradient(to 45deg, rgba(42, 27, 161, 0.6), rgba(50, 189, 229, 0.6) 100%);
+        }
+        @media (max-width: 450px) {
+            .margins {
+                margin-right: 1rem;
+                margin-left: 1rem;
+            }
+        }
+
+
+    </style>
+{% endblock %}
+
+{% block content %}
+    <!--Main Layout-->
+    <main class="pt-5">
+
+        <div class="container">
+
+            <!--Section: Features v.2-->
+            <section class="text-center wow fadeIn" data-wow-delay="0.3s">
+
+                <!--Section heading-->
+                <h5 class="font-weight-bold text-center h5 mb-3 mt-5">진산마을 성원 부동산관리</h5>
+                <!--Section description-->
+                <p class="text-center grey-text mb-5 mx-auto w-responsive lead small">진산마을 성원상떼빌아파트의 부동산 현황을 파악하기 위한 프로그램입니다. <span class="blue-text">로그인을 하면 신고 한 매물을 별도로 관리 할 수 있습니다.</span></p>
+
+                <!--Grid row-->
+                <div class="row text-left">
+
+                    <!--Grid column-->
+                    <div class="col-md-4 mb-4">
+                        <div class="col-1 col-md-2 float-left">
+                            <i class="fas fa-exclamation-triangle fa-2x blue-text"></i>
+                            {#                            <span class="blue-text h1 font-weight-bold">24</span>#}
+                        </div>
+                        <div class="col-10 col-md-9 col-lg-10 float-right">
+                            <h4 class="font-weight-bold mb-2">허위매물현황</h4>
+                            {% for list in lists %}
+                                {#                                {% if list.price <= sm.price and list.size == 59 or list.price <= md.price and list.size == 84 or list.price <= lg.price and list.size == 133 %}#}
+                                <p class="grey-text my-0"><a href="https://m.land.naver.com/article/info/{{ list.article_num }}" target="_blank">{{ list.size }} {{ list.dong }} {{ list.price }} {{ list.office | truncatechars:7 }}</a></p>
+                                {#                                {% endif %}#}
+
+                            {% endfor %}
+
+
+                            <a href="{% url 'fake_list' %}" class="btn btn-primary btn-sm ml-0">View more</a>
+                        </div>
+                    </div>
+                    <!--Grid column-->
+
+                    <!--Grid column-->
+                    <div class="col-md-4 mb-4">
+                        <div class="col-1 col-md-2 float-left">
+                            <i class="far fa-building fa-2x orange-text"></i>
+{#                            <span class="orange-text h3 font-weight-bold">32건</span>#}
+                        </div>
+                        <div class="col-10 col-md-9 col-lg-10 float-right">
+                            <h4 class="font-weight-bold mb-2">총 매물현황(현/총)</h4>
+                            {% for foo in each_office %}
+                            <p class="grey-text small mb-0">{{ foo.office }}({{ foo.count_now }}/{{ foo.count }})</p>
+                            {% endfor %}
+
+
+                            <a href="{% url 'all_apart_lists' %}" class="btn btn-deep-orange btn-sm ml-0">View more</a>
+                        </div>
+                    </div>
+                    <!--Grid column-->
+
+                    <!--Grid column-->
+                    <div class="col-md-4 mb-4">
+                        <div class="col-1 col-md-2 float-left">
+                            {#                            <i class="fas fa-tachometer-alt fa-2x purple-text"></i>#}
+                            <i class="far fa-handshake fa-2x purple-text"></i>
+{#                            <span class="purple-text h3 font-weight-bold">13건</span>#}
+                        </div>
+                        <div class="col-10 col-md-9 col-lg-10 float-right">
+                            <h4 class="font-weight-bold mb-2">총 실거래현황</h4>
+                            <p class="grey-text">개발중</p>
+                            <a class="btn btn-secondary btn-sm ml-0">View more</a>
+                        </div>
+                    </div>
+                    <!--Grid column-->
+
+                </div>
+                <!--Grid row-->
+
+            </section>
+            <!--Section: Features v.2-->
+
+            <hr class="my-5">
+
+
+            <!-- Section: Pricing v.6 -->
+            <section class="my-5 wow fadeIn" data-wow-delay="0.3s">
+
+                <!-- Section heading -->
+                <h2 class="h1-responsive font-weight-bold text-center my-5">우리아파트 동향(개발중)</h2>
+                <!-- Section description -->
+                <p class="text-center w-responsive mx-auto mb-5 grey-text">우리아파트 매매가 추이, 주변아파트 대비 상승률 비교, 각종 통계 지표 섹션</p>
+
+                <!-- Grid row -->
+                <div class="row">
+
+                    <!-- Grid column -->
+                    <div class="col-lg-4 col-md-12 mb-lg-0 mb-4">
+
+                        <!-- Pricing card -->
+                        <div class="card pricing-card white-text">
+
+                            <!-- Price -->
+                            <div class="aqua-gradient rounded-top">
+                                <h4 class="option">우리아파트 최고가</h4>
+                            </div>
+
+                            <!-- Features -->
+                            <div class="card-body striped green-striped card-background px-5">
+
+                                <h2 class="my-4 pb-3 h1"><i class="fas fa-arrow-up"></i> 20%</h2>
+                                <ul>
+                                    <li>
+                                        <p><strong><i class="fas fa-arrow-up"></i> 37,000</strong> 24평</p>
+                                    </li>
+                                    <li>
+                                        <p><strong><i class="fas fa-arrow-up"></i> 50,000</strong> 34평</p>
+                                    </li>
+                                    <li>
+                                        <p><strong><i class="fas fa-arrow-up"></i> 70,000</strong> 48평</p>
+                                    </li>
+                                </ul>
+                                <button class="mb-3 mt-3 btn aqua-gradient btn-rounded">자세히보기</button>
+
+                            </div>
+                            <!-- Features -->
+
+                        </div>
+
+                        <!-- Pricing card -->
+
+                    </div>
+                    <!-- Grid column -->
+
+                    <!-- Grid column -->
+                    <div class="col-lg-4 col-md-6 mb-md-0 mb-4">
+
+                        <!-- Pricing card -->
+                        <div class="card pricing-card white-text">
+
+                            <!-- Price -->
+                            <div class="peach-gradient rounded-top">
+                                <h4 class="option">주변아파트 동향</h4>
+                            </div>
+
+                            <!-- Features -->
+                            <div class="card-body striped orange-striped card-background px-5">
+
+                                <h2 class="my-4 pb-3 h1">10%</h2>
+                                <ul>
+                                    <li>
+                                        <p><strong>10%</strong> 현대성우</p>
+                                    </li>
+                                    <li>
+                                        <p><strong>13%</strong> 동보1차</p>
+                                    </li>
+                                    <li>
+                                        <p><strong>5%</strong> 상현롯데</p>
+                                    </li>
+                                    <li>
+                                        <p><strong>-20%</strong> 성복롯데</p>
+                                    </li>
+                                </ul>
+                                <button class="mb-3 mt-3 btn peach-gradient btn-rounded">View more</button>
+
+                            </div>
+                            <!-- Features -->
+
+                        </div>
+                        <!-- Pricing card -->
+
+                    </div>
+                    <!-- Grid column -->
+
+                    <!-- Grid column -->
+                    <div class="col-lg-4 col-md-6">
+
+                        <!-- Pricing card -->
+                        <div class="card pricing-card white-text">
+
+                            <!-- Price -->
+                            <div class="purple-gradient rounded-top">
+                                <h4 class="option">수지아파트 조회수</h4>
+                            </div>
+
+                            <!-- Features -->
+                            <div class="card-body striped purple-striped card-background px-5">
+                                <ul>
+                                    <li>
+                                        <p><strong>1234</strong> 진산마을성원</p>
+                                    </li>
+                                    <li>
+                                        <p><strong>1000</strong> 현대성우</p>
+                                    </li>
+                                    <li>
+                                        <p><strong>899</strong> 상현롯데</p>
+                                    </li>
+                                    <li>
+                                        <p><strong>400</strong> 성복자이</p>
+                                    </li>
+                                </ul>
+                                <button class="mb-3 mt-3 btn purple-gradient btn-rounded">View more</button>
+
+                            </div>
+                            <!-- Features -->
+
+                        </div>
+                        <!-- Pricing card -->
+
+                    </div>
+                    <!-- Grid column -->
+
+                </div>
+                <!-- Grid row -->
+
+            </section>
+            <!-- Section: Pricing v.6 -->
+
+
+        </div>
+
+
+    </main>
+    <!--Main Layout-->
+
+
+{% endblock %}
+{% block before_script %}
+
+{% endblock %}
+
+{% block after_script %}
+
+{% endblock %}

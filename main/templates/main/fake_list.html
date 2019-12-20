@@ -15,7 +15,11 @@
     <main class="pt-5">
         <div class="container pt-5">
             {#            <p class="font-weight-bold">허위매물 등록현황<span type="button" class="badge badge-pill badge-light float-right" data-toggle="modal" data-target="#fullHeightModalTop">infomation</span></p>#}
+        {% if user.is_authenticated %}
             <p class="font-weight-bold">허위매물 등록현황<a href="{% url 'fake_list_all' %}" class="badge badge-pill badge-light float-right">신고한매물도 함께보기</a></p>
+        {% else %}
+        <p class="font-weight-bold">허위매물 등록현황<a href="#" id="id_login_required" class="badge badge-pill badge-light float-right">신고한매물도 함께보기</a></p>
+        {% endif %}
             <hr>
             <div class="row">
 
@@ -253,6 +257,10 @@
 {% block after_script %}
     <script>
         $('[id^=id_singo_not_login_]').click(function () {
+            alert('로그인을 하시면 신고 매물 관리가 편리합니다. 회원아이디 생성 문의 : 관리자(카톡방 아이디 : 제갈익 or 112동) 카톡으로')
+        });
+
+        $('#id_login_required').click(function () {
             alert('로그인을 하시면 신고 매물 관리가 편리합니다. 회원아이디 생성 문의 : 관리자(카톡방 아이디 : 제갈익 or 112동) 카톡으로')
         });
 
